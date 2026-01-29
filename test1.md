@@ -101,6 +101,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout repository') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/denverzpwork/tests.git',
+                    ]]
+                )
+            }
+        }
+
+
         stage('Show changelog message (Jenkins view)') {
             steps {
                 script {
@@ -143,8 +155,9 @@ pipeline {
                     }
 
                     echo "\nDetection results:"
-                    echo "Changelog contains [skip-deploy]: ${changelogText =~ /\\[skip-deploy\\]/}"
-                    echo "Full commit message contains [skip-deploy]: ${fullMsg =~ /\\[skip-deploy\\]/}"
+                    echo "Changelog contains [skip-deploy]: ${changelogText =~ /\[skip-deploy\]/}"
+                    echo "Full commit message contains [skip-deploy]: ${fullMsg =~ /\[skip-deploy\]/}"
+
                 }
             }
         }
